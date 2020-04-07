@@ -1,16 +1,23 @@
 // tslint:disable: indent
 
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ElementRef } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Observable } from 'rxjs';
 import {Reporte} from '../../model/Reporte';
 import { FirebaseService } from '../../servicios/firebase.service';
+import { Chart } from 'chart.js';
 @Component({
 	selector: 'app-reporte',
 	templateUrl: './reporte.page.html',
 	styleUrls: [ './reporte.page.scss' ]
 })
 export class ReportePage implements OnInit {
+  @ViewChild('barCanvas', { static: true }) barCanvas: ElementRef;
+  @ViewChild('doughnutCanvas', { static: true }) doughnutCanvas: ElementRef;
+  @ViewChild('lineCanvas', { static: true }) lineCanvas: ElementRef;
+  barChart: any;
+  doughnutChart: any;
+  lineChart: any;
   someValue: number;
   totalReportes: number;
   totalReportesDia: number;
@@ -110,12 +117,77 @@ constructor(private geolocation: Geolocation, private fbService: FirebaseService
     let contador22 = 0;
     let contador23 = 0;
     let contador24 = 0;
-
-
-
+    let contadorAnio2020 = 0;
+    let contadorAnio2019 = 0;
+    let contadorAnio2018 = 0;
+    let contadorEnero = 0;
+    let contadorFeb = 0;
+    let contadorMar = 0;
+    let contadorAbril = 0;
+    let contadorMayo = 0;
+    let contadorJunio = 0;
+    let contadorJulio = 0;
+    let contadorAgosto = 0;
+    let contadorSept = 0;
+    let contadorOct = 0;
+    let contadorNov = 0;
+    let contadorDic = 0;
 
     this.fbService.getReportes().subscribe((res) => {
       res.forEach(item => {
+        // tslint:disable-next-line: no-construct
+        let arreglo = new String(item.fecha);
+        console.log(arreglo);
+        if ((arreglo).includes('2020')) {
+          contadorAnio2020 = contadorAnio2020 + 1;
+        }
+        if ((arreglo).includes('2019')) {
+          contadorAnio2019 = contadorAnio2019 + 1;
+        }
+        if ((arreglo).includes('2018')) {
+          contadorAnio2018 = contadorAnio2018 + 1;
+        }
+        if ((arreglo).includes('-01-')) {
+          contadorEnero = contadorEnero + 1;
+        }
+        if ((arreglo).includes('-02-')) {
+          contadorFeb = contadorFeb + 1;
+        }
+        if ((arreglo).includes('-03-')) {
+          contadorMar = contadorMar + 1;
+        }
+        if ((arreglo).includes('-04-')) {
+          contadorAbril = contadorAbril + 1;
+        }
+        if ((arreglo).includes('-05-')) {
+          contadorMayo = contadorMayo + 1;
+        }
+        if ((arreglo).includes('-06-')) {
+          contadorJunio = contadorJunio + 1;
+        }
+        if ((arreglo).includes('-07-')) {
+          contadorJulio = contadorJulio + 1;
+        }
+        if ((arreglo).includes('-08-')) {
+          contadorAgosto = contadorAgosto + 1;
+        }
+        if ((arreglo).includes('-09-')) {
+          contadorSept = contadorSept + 1;
+        }
+        if ((arreglo).includes('-10-')) {
+          contadorOct = contadorOct + 1;
+        }
+        if ((arreglo).includes('-11-')) {
+          contadorNov = contadorNov + 1;
+        }
+        if ((arreglo).includes('-12-')) {
+          contadorDic = contadorDic + 1;
+        }
+
+        /*
+        var separar = arreglo.split('-');
+        console.log(separar);
+        */
         if (item.hora <= 12) {
           if (item.hora === 1) {
             contadorUno = contadorUno + 1;
@@ -224,6 +296,7 @@ constructor(private geolocation: Geolocation, private fbService: FirebaseService
         }
         this.calculateSum(item.hora);
         contador = contador + 1;
+
       });
       console.log(contadorSiete);
       this.totalReportes = contador;
@@ -258,7 +331,35 @@ constructor(private geolocation: Geolocation, private fbService: FirebaseService
     contador23,
     contador24,
       );
+      this.barChartMethod(contadorUno,
+        contadorDos,
+        contadorTres,
+        contadorCuatro,
+        contadorCinco,
+        contadorSeis,
+        contadorSiete,
+        contadorOcho,
+        contadorNueve,
+        contadorDiez,
+        contadorOnce,
+        contadorDoce,
+        contadorTrece,
+        contadorCatorce,
+        contadorQuince,
+        contador16,
+        contador17,
+        contador18,
+        contador19,
+        contador20,
+        contador21,
+        contador22,
+        contador23,
+        contador24);
+      this.doughnutChartMethod(contadorAnio2018, contadorAnio2019, contadorAnio2020);
+      // tslint:disable-next-line: max-line-length
+      this.lineChartMethod(contadorEnero, contadorFeb, contadorMar, contadorAbril, contadorMayo, contadorJunio, contadorJulio, contadorAgosto, contadorSept, contadorOct, contadorNov, contadorDic);
     });
+
   }
   calculateSum(value) {
     this.hora = (Number(value) + Number(this.hora));
@@ -275,10 +376,10 @@ constructor(private geolocation: Geolocation, private fbService: FirebaseService
   }
 
   calculateAverageDia(count2) {
-    console.log(count2);
-    console.log(this.horaDia);
+    // console.log(count2);
+    // console.log(this.horaDia);
     this.horaPromedioDia = (Number(this.horaDia) / Number(count2));
-    console.log(this.horaPromedioDia);
+    // console.log(this.horaPromedioDia);
   }
   calculateSumNoche(value3) {
 
@@ -432,7 +533,192 @@ constructor(private geolocation: Geolocation, private fbService: FirebaseService
       this.numModa = 24;
 
     }
-    console.log(this.moda);
-    console.log(this.numModa);
+    // console.log(this.moda);
+    // console.log(this.numModa);
+  }
+  barChartMethod(
+    contadorUno,
+    contadorDos,
+    contadorTres,
+    contadorCuatro,
+    contadorCinco,
+    contadorSeis,
+    contadorSiete,
+    contadorOcho,
+    contadorNueve,
+    contadorDiez,
+    contadorOnce,
+    contadorDoce,
+    contadorTrece,
+    contadorCatorce,
+    contadorQuince,
+    contador16,
+    contador17,
+    contador18,
+    contador19,
+    contador20,
+    contador21,
+    contador22,
+    contador23,
+    contador24) {
+    // console.log(contadorTres);
+    // tslint:disable-next-line: align
+    this.barChart = new Chart(this.barCanvas.nativeElement, {
+      type: 'bar',
+      data: {
+        // tslint:disable-next-line: max-line-length
+        labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'],
+        datasets: [{
+          label: 'Reportes',
+          data: [
+            contadorUno,
+    contadorDos,
+    contadorTres,
+    contadorCuatro,
+    contadorCinco,
+    contadorSeis,
+    contadorSiete,
+    contadorOcho,
+    contadorNueve,
+    contadorDiez,
+    contadorOnce,
+    contadorDoce,
+    contadorTrece,
+    contadorCatorce,
+    contadorQuince,
+    contador16,
+    contador17,
+    contador18,
+    contador19,
+    contador20,
+    contador21,
+    contador22,
+    contador23,
+    contador24
+          ],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+  }
+
+  doughnutChartMethod(contador2018, contador2019, contador2020) {
+    this.doughnutChart = new Chart(this.doughnutCanvas.nativeElement, {
+      type: 'doughnut',
+      data: {
+        labels: ['2018', '2019', '2020'],
+        datasets: [{
+          label: 'Número de reportes',
+          data: [contador2018, contador2019, contador2020],
+          backgroundColor: [
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)'
+          ],
+          hoverBackgroundColor: [
+            '#FFCE56',
+            '#FF6384',
+            '#36A2EB',
+            '#FFCE56',
+            '#FF6384'
+          ]
+        }]
+      }
+    });
+  }
+// tslint:disable-next-line: max-line-length
+  lineChartMethod(contadorEnero, contadorFeb, contadorMar, contadorAbril, contadorMayo, contadorJunio, contadorJulio, contadorAgosto, contadorSept, contadorOct, contadorNov, contadorDic) {
+    this.lineChart = new Chart(this.lineCanvas.nativeElement, {
+      type: 'line',
+      data: {
+        labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Noviembre', 'Diciembre'],
+        datasets: [
+          {
+            label: 'Reportes por mes',
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: 'rgba(75,192,192,0.4)',
+            borderColor: 'rgba(75,192,192,1)',
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: 'rgba(75,192,192,1)',
+            pointBackgroundColor: '#fff',
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+            pointHoverBorderColor: 'rgba(220,220,220,1)',
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            // tslint:disable-next-line: max-line-length
+            data: [contadorEnero, contadorFeb, contadorMar, contadorAbril, contadorMayo, contadorJunio, contadorJulio, contadorAgosto, contadorSept, contadorOct, contadorNov, contadorDic],
+            spanGaps: false,
+          }
+        ]
+      }
+    });
   }
 }
