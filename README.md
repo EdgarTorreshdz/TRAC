@@ -6,7 +6,7 @@ This app accompanies the Ionic component documentation.
 ## Installation & Development
 * **Clone this repository:** `git clone https://github.com/angel-salazar-gil/Trac.git`
 * **Enter the folder:** `cd trac`
-* **Run in the console:** `npm install`
+* **Run:** `npm install` **from a terminal**
 * **Run:** `ionic serve -o` **from a terminal**
 
 ## Development server
